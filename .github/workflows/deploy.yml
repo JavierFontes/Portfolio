@@ -3,41 +3,35 @@ name: Deploy Astro to GitHub Pages
 on:
   push:
     branches:
-      - main   # Se ejecuta al hacer push a main
-  workflow_dispatch: # Permite ejecutarlo manualmente
+      - main
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Clonar el repositorio
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2️⃣ Configurar Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
 
-      # 3️⃣ Instalar dependencias
       - name: Install dependencies
         run: npm install
 
-      # 4️⃣ Construir el sitio con Astro
       - name: Build Astro site
         run: npm run build
 
-      # 5️⃣ Evitar que GitHub Pages use Jekyll
       - name: Ensure no Jekyll
         run: touch .nojekyll
 
-      # 6️⃣ Publicar la carpeta dist/ en GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          publish_branch: gh-pages
+          publish_branch: main
           keep_files: true
